@@ -1,0 +1,11 @@
+import sounddevice as sd
+
+duration = 3  # seconds
+fs = 44100    # sample rate
+
+print("Recording...")
+audio = sd.rec(int(duration * fs), samplerate=fs, channels=1)
+sd.wait()  # Wait until recording is finished
+print("Playing back...")
+sd.play(audio, samplerate=fs)
+sd.wait()  # Wait until playback is finished
