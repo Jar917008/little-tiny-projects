@@ -1,0 +1,79 @@
+import json
+import pyaudio
+from vosk import KaldiRecognizer, Model
+from pynput.keyboard import Key, Controller
+import keyboard
+import time
+
+keyboard_controller = Controller()
+
+model=Model('C:\work\speechrec\small_model')
+rec= KaldiRecognizer(model,16000)
+p=pyaudio.PyAudio()
+stream= p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+stream.start_stream()
+
+def listen():
+     while True:
+          data=stream.read(4000,exception_on_overflow=False)
+          if (rec.AcceptWaveform(data)) and (len(data)>0):
+               answer=json.loads(rec.Result())
+               if answer['text']:
+                    yield answer ['text']
+
+
+for text in listen():
+     print(text)
+
+     if(("jump") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press(Key.space)
+          keyboard_controller.release(Key.space)
+
+     if(("back") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press('s')
+          time.sleep(1.5)
+          keyboard_controller.release('s')
+
+     if(("forward") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press('w')
+          time.sleep(1.5)
+          keyboard_controller.release('w')
+     
+     if(("left") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press('a')
+          time.sleep(1.5)
+          keyboard_controller.release('a')
+
+     if(("right") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press('d')
+          time.sleep(1.5)
+          keyboard_controller.release('d')
+
+     if(("shot") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press('l')
+          keyboard_controller.release('l')
+
+     if(("project") in text.lower().strip(",.!;:").split()):
+          print("pressing button")
+          keyboard_controller.press('u')
+          time.sleep(0.1)
+          keyboard_controller.release('u')
+          keyboard_controller.press('f')
+          keyboard_controller.release('f')
+
+
+
+
+     
+     if keyboard.is_pressed("p"):
+           break 
+          
+     
+
+
